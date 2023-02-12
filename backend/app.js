@@ -24,13 +24,12 @@ app.get("/", (req, res) => {
 // Listen on the connection event for incoming sockets and log it to the console
 io.on("connection", (socket) => {
   console.log("A user connected");
-
+  io.emit("user connected");
   socket.on("chat message", (msg) => {
     io.emit("chat message", msg);
   });
-  socket.on("chat message", (msg) => {});
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    io.emit("user disconnected");
   });
 });
 
