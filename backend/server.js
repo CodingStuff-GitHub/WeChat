@@ -3,8 +3,12 @@ import dotenv from "dotenv";
 import app from "./app.js";
 import http from "http";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 //Put environment variables in process
-dotenv.config({ path: "backend/config/config.env" });
+if (!isProduction) {
+  dotenv.config({ path: "backend/config/config.env" });
+}
 
 connectDatabase();
 
