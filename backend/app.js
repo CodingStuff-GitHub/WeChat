@@ -1,5 +1,4 @@
 import express from "express";
-import http from "http";
 
 const app = express();
 
@@ -7,4 +6,9 @@ const app = express();
 import { router as userRoutes } from "./routes/userRoutes.js";
 app.use("/api/v1", userRoutes);
 
-export default http.createServer(app);
+app.get("/", (req, res) => {
+  console.log(__dirname);
+  res.sendFile(__dirname + "");
+});
+
+export default app;
