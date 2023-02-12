@@ -48,3 +48,10 @@ body {
 #messages > li:nth-child(odd) {
   background: #efefef;
 }
+#messages > span {
+  display: block;
+  border: #333 1px solid;
+  margin: 0;
+  text-align: center;
+  padding: 0;
+}
