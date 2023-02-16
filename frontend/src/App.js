@@ -8,7 +8,7 @@ const App = () => {
 
   useEffect(() => {
     let uri = "";
-    if (!process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production") {
       uri = "http://localhost:4000";
     }
     const newSocket = io(uri);

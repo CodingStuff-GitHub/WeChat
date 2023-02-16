@@ -3,9 +3,7 @@ import dotenv from "dotenv";
 import server from "./app.js";
 
 // Put environment variables in process
-if (!process.env.NODE_ENV === "production") {
-  dotenv.config({ path: "backend/config/config.env" });
-}
+dotenv.config({ path: "backend/config/config.env" });
 
 connectDatabase();
 
