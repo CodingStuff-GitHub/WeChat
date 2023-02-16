@@ -18,10 +18,13 @@ const io = new Server(server, {
 // User Routes
 import { router as userRoutes } from "./routes/userRoutes.js";
 app.use("/api/v1", userRoutes);
-
+console.log(fileURLToPath(import.meta.url));
+console.log(__dirname);
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.get("*", (_req, res) => {
+  console.log(fileURLToPath(import.meta.url));
+  console.log(__dirname);
   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
 });
 
