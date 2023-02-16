@@ -4,9 +4,14 @@ import React, { useState, useEffect } from "react";
 const App = () => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:4000");
+    let uri = "";
+    if (!process.env.NODE_ENV === "production") {
+      uri = "http://localhost:4000";
+    }
+    const newSocket = io(uri);
     setSocket(newSocket);
 
     return () => newSocket.close();
@@ -21,10 +26,10 @@ const App = () => {
     console.log("message check");
     if (socket) {
       socket.on("message", (data) => {
-        console.log(data);
+        setMessages([...messages, data]);
       });
     }
-  }, [socket]);
+  }, [messages, socket]);
 
   return (
     <div>
@@ -34,6 +39,11 @@ const App = () => {
         onChange={(e) => setMessage(e.target.value)}
       />
       <button onClick={sendMessage}>Send Message</button>
+      <div>
+        {messages.map((singleMessage) => {
+          return <li key={singleMessage}>{singleMessage}</li>;
+        })}
+      </div>
     </div>
   );
 };
