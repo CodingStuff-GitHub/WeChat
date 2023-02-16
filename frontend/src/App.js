@@ -6,17 +6,19 @@ const App = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const newSocket = io();
+    const newSocket = io("http://localhost:4000");
     setSocket(newSocket);
 
     return () => newSocket.close();
   }, []);
 
   function sendMessage() {
+    console.log("Sent message");
     socket.emit("message", message);
   }
 
   useEffect(() => {
+    console.log("message check");
     if (socket) {
       socket.on("message", (data) => {
         console.log(data);
