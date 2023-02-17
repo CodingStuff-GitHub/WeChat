@@ -13,6 +13,7 @@ const Chatroom = () => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const nickname = sessionStorage.getItem("nickname");
   const ref = React.useRef(null);
   //Starting new socket connection
   useEffect(() => {
@@ -27,9 +28,11 @@ const Chatroom = () => {
   }, []);
 
   function sendMessage() {
-    console.log("Sent message");
-    socket.emit("message", message);
-    setMessage("");
+    if (message) {
+      console.log("Sent message");
+      socket.emit("message", { message, nickname });
+      setMessage("");
+    }
   }
 
   useEffect(() => {
@@ -49,8 +52,11 @@ const Chatroom = () => {
       {/* Messages Container */}
       <List sx={{ pb: 7 }}>
         {messages.map((singlemessage) => (
-          <ListItem key={singlemessage} divider>
-            <ListItemText primary={singlemessage} />
+          <ListItem key={singlemessage.message} divider>
+            <ListItemText
+              primary={singlemessage.message}
+              secondary={"By " + singlemessage.nickname}
+            />
           </ListItem>
         ))}
         <div ref={ref} />

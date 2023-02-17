@@ -10,6 +10,11 @@ export default function Nickname() {
   const [open, setOpen] = React.useState(true);
   const [nickname, setNickname] = React.useState("");
 
+  React.useEffect(() => {
+    if (sessionStorage.getItem("nickname")) {
+      setOpen(false);
+    }
+  }, []);
   const handleClose = () => {
     setOpen(false);
     sessionStorage.setItem("nickname", nickname);
