@@ -21,22 +21,25 @@ const Chatroom = () => {
     if (process.env.NODE_ENV !== "production") {
       uri = "http://localhost:4000";
     }
-    const newSocket = io(uri);
+    const newSocket = io(uri, { autoConnect: false });
+    newSocket.connect();
     setSocket(newSocket);
-
+    newSocket.onAny((event, ...args) => {
+      console.log(event, args);
+    });
     return () => newSocket.close();
   }, []);
 
+  // Message is sent to the server
   function sendMessage() {
     if (message) {
-      console.log("Sent message");
       socket.emit("message", { message, nickname });
       setMessage("");
     }
   }
 
+  //Check for incoming messages
   useEffect(() => {
-    console.log("message check");
     if (socket) {
       socket.on("message", (data) => {
         setMessages([...messages, data]);
@@ -44,15 +47,24 @@ const Chatroom = () => {
     }
   }, [messages, socket]);
 
+  //If new messages are received go to last to show it
   React.useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // check if the Enter key was pressed
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   return (
     <Box sx={{ pb: 7 }}>
       {/* Messages Container */}
       <List sx={{ pb: 7 }}>
         {messages.map((singlemessage) => (
-          <ListItem key={singlemessage.message} divider>
+          <ListItem key={singlemessage} divider>
             <ListItemText
               primary={singlemessage.message}
               secondary={"By " + singlemessage.nickname}
@@ -74,6 +86,7 @@ const Chatroom = () => {
             value={message}
             fullWidth
             onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           <Button onClick={sendMessage} variant="outlined">
             Send
