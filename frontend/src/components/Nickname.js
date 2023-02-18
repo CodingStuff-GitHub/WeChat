@@ -6,20 +6,31 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Nickname() {
+const Nickname = () => {
   const [open, setOpen] = React.useState(true);
   const [nickname, setNickname] = React.useState("");
 
+  //Check if the nickname is already set
   React.useEffect(() => {
     if (sessionStorage.getItem("nickname")) {
       setOpen(false);
     }
   }, []);
+
+  //Close the dialog
   const handleClose = () => {
-    setOpen(false);
-    sessionStorage.setItem("nickname", nickname);
+    if (nickname) {
+      setOpen(false);
+      sessionStorage.setItem("nickname", nickname);
+    }
   };
 
+  // Check if the Enter key was pressed
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleClose();
+    }
+  };
   return (
     <div>
       <Dialog open={open}>
@@ -33,6 +44,7 @@ export default function Nickname() {
             label="Nickname"
             fullWidth
             variant="standard"
+            onKeyPress={handleKeyPress}
           />
         </DialogContent>
         <DialogActions>
@@ -41,4 +53,5 @@ export default function Nickname() {
       </Dialog>
     </div>
   );
-}
+};
+export default Nickname;
