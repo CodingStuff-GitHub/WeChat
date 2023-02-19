@@ -6,22 +6,25 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-const Nickname = () => {
+const Nickname = ({ socket }) => {
   const [open, setOpen] = React.useState(true);
   const [nickname, setNickname] = React.useState("");
-
-  //Check if the nickname is already set
   React.useEffect(() => {
-    if (sessionStorage.getItem("nickname")) {
-      setOpen(false);
-    }
-  }, []);
+    socket.on("connect_error", (err) => {
+      if (err.message === "Invalid nickname") {
+        setOpen(true);
+        console.log(err.message);
+      }
+      socket.off("connect_error");
+    });
+  });
 
   //Close the dialog
   const handleClose = () => {
     if (nickname) {
       setOpen(false);
-      sessionStorage.setItem("nickname", nickname);
+      socket.auth = { nickname };
+      socket.connect();
     }
   };
 

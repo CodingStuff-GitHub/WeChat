@@ -8,15 +8,35 @@ const socketFunctions = (server) => {
       methods: ["GET", "POST"],
     },
   });
+  //Middleware for checking the nickname
+  io.use((socket, next) => {
+    const nickname = socket.handshake.auth.nickname;
+    if (!nickname || nickname === "admin") {
+      console.log("Invalid: " + nickname);
+      return next(new Error("Invalid nickname", 401));
+    }
+    socket.nickname = nickname;
+    next();
+  });
 
+  //New Connection
   io.on("connection", (socket) => {
-    console.log(socket.id);
-    io.emit("user connected");
+    io.emit(
+      "user connected",
+      `${socket.nickname} connected`,
+      socket.nickname,
+      "info"
+    );
     socket.on("message", (msg) => {
-      io.emit("message", msg);
+      io.emit("message", msg, socket.nickname, "message");
     });
     socket.on("disconnect", () => {
-      io.emit("user disconnected");
+      io.emit(
+        "user disconnected",
+        `${socket.nickname} disconnected`,
+        socket.nickname,
+        "info"
+      );
     });
   });
 };

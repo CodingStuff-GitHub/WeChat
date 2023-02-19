@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -8,32 +7,18 @@ import Paper from "@mui/material/Paper";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import Chip from "@mui/material/Chip";
 
-const Chatroom = () => {
-  const [socket, setSocket] = useState(null);
+const Chatroom = ({ socket }) => {
+  const [index, setIndex] = useState(0);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const nickname = sessionStorage.getItem("nickname");
   const ref = React.useRef(null);
-  //Starting new socket connection
-  useEffect(() => {
-    let uri = "";
-    if (process.env.NODE_ENV !== "production") {
-      uri = "http://localhost:4000";
-    }
-    const newSocket = io(uri, { autoConnect: false });
-    newSocket.connect();
-    setSocket(newSocket);
-    newSocket.onAny((event, ...args) => {
-      console.log(event, args);
-    });
-    return () => newSocket.close();
-  }, []);
 
   // Message is sent to the server
   function sendMessage() {
     if (message) {
-      socket.emit("message", { message, nickname });
+      socket.emit("message", message);
       setMessage("");
     }
   }
@@ -41,11 +26,20 @@ const Chatroom = () => {
   //Check for incoming messages
   useEffect(() => {
     if (socket) {
-      socket.on("message", (data) => {
-        setMessages([...messages, data]);
+      socket.on("message", (message, nickname, type) => {
+        setIndex(index + 1);
+        setMessages([...messages, { message, nickname, index, type }]);
+      });
+      socket.on("user connected", (message, nickname, type) => {
+        setIndex(index + 1);
+        setMessages([...messages, { message, nickname, index, type }]);
+      });
+      socket.on("user disconnected", (message, nickname, type) => {
+        setIndex(index + 1);
+        setMessages([...messages, { message, nickname, index, type }]);
       });
     }
-  }, [messages, socket]);
+  }, [index, messages, socket]);
 
   //If new messages are received go to last to show it
   React.useEffect(() => {
@@ -64,12 +58,33 @@ const Chatroom = () => {
       {/* Messages Container */}
       <List sx={{ pb: 7 }}>
         {messages.map((singlemessage) => (
-          <ListItem key={singlemessage} divider>
-            <ListItemText
-              primary={singlemessage.message}
-              secondary={"By " + singlemessage.nickname}
-            />
-          </ListItem>
+          <div
+            key={
+              singlemessage.nickname +
+              singlemessage.message +
+              singlemessage.index
+            }
+          >
+            {singlemessage.type === "message" ? (
+              <ListItem divider>
+                <ListItemText
+                  primary={singlemessage.message}
+                  secondary={"By " + singlemessage.nickname}
+                />
+              </ListItem>
+            ) : (
+              <ListItem
+                divider
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Chip label={singlemessage.message} variant="outlined" />
+              </ListItem>
+            )}
+          </div>
         ))}
         <div ref={ref} />
       </List>
