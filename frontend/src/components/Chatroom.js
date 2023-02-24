@@ -9,7 +9,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Chip from "@mui/material/Chip";
 
-const Chatroom = ({ socket }) => {
+const Chatroom = ({ socket, drawerWidth }) => {
   const [index, setIndex] = useState(0);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -54,61 +54,70 @@ const Chatroom = ({ socket }) => {
   };
 
   return (
-    <Box sx={{ pb: 7 }}>
-      {/* Messages Container */}
-      <List sx={{ pb: 7 }}>
-        {messages.map((singlemessage) => (
-          <div
-            key={
-              singlemessage.nickname +
-              singlemessage.message +
-              singlemessage.index
-            }
-          >
-            {singlemessage.type === "message" ? (
-              <ListItem divider>
-                <ListItemText
-                  primary={singlemessage.message}
-                  secondary={"By " + singlemessage.nickname}
-                />
-              </ListItem>
-            ) : (
-              <ListItem
-                divider
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Chip label={singlemessage.message} variant="outlined" />
-              </ListItem>
-            )}
-          </div>
-        ))}
-        <div ref={ref} />
-      </List>
-      {/* New Message TextField Container */}
-      <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-        elevation={3}
-      >
-        <Stack direction="row" spacing={2} sx={{ margin: 2 }}>
-          <TextField
-            id="message"
-            label="Message"
-            variant="standard"
-            value={message}
-            fullWidth
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <Button onClick={sendMessage} variant="outlined">
-            Send
-          </Button>
-        </Stack>
-      </Paper>
-    </Box>
+    <>
+      <Box sx={{ pb: 7 }}>
+        {/* Messages Container */}
+        <List sx={{ pb: 7 }}>
+          {messages.map((singlemessage) => (
+            <div
+              key={
+                singlemessage.nickname +
+                singlemessage.message +
+                singlemessage.index
+              }
+            >
+              {singlemessage.type === "message" ? (
+                <ListItem divider>
+                  <ListItemText
+                    primary={singlemessage.message}
+                    secondary={"By " + singlemessage.nickname}
+                  />
+                </ListItem>
+              ) : (
+                <ListItem
+                  divider
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Chip label={singlemessage.message} variant="outlined" />
+                </ListItem>
+              )}
+            </div>
+          ))}
+          <div ref={ref} />
+        </List>
+        {/* New Message TextField Container */}
+        <Paper
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+          elevation={3}
+        >
+          <Stack direction="row" spacing={2} sx={{ margin: 2 }}>
+            <TextField
+              id="message"
+              label="Message"
+              variant="standard"
+              value={message}
+              fullWidth
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <Button onClick={sendMessage} variant="outlined">
+              Send
+            </Button>
+          </Stack>
+        </Paper>
+      </Box>
+    </>
   );
 };
 
