@@ -21,15 +21,29 @@ const socketFunctions = (server) => {
 
   //New Connection
   io.on("connection", (socket) => {
+    // Emit user connected event
     io.emit(
       "user connected",
       `${socket.nickname} connected`,
       socket.nickname,
       "info"
     );
+    // Send all existing users to the client
+    const users = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: id,
+        username: socket.username,
+      });
+    }
+    socket.emit("users", users);
+
+    // Emit when a new message arrives
     socket.on("message", (msg) => {
       io.emit("message", msg, socket.nickname, "message");
     });
+
+    // Emit when a user disconnects
     socket.on("disconnect", () => {
       io.emit(
         "user disconnected",
