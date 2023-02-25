@@ -29,6 +29,18 @@ const socketFunctions = (server) => {
       "info",
       socket.id
     );
+
+    // Emit when a user disconnects
+    socket.on("disconnect", () => {
+      io.emit(
+        "user disconnected",
+        `${socket.nickname} disconnected`,
+        socket.nickname,
+        "info",
+        socket.id
+      );
+    });
+
     // Send all existing users to the client
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
@@ -44,15 +56,12 @@ const socketFunctions = (server) => {
       io.emit("message", msg, socket.nickname, "message");
     });
 
-    // Emit when a user disconnects
-    socket.on("disconnect", () => {
-      io.emit(
-        "user disconnected",
-        `${socket.nickname} disconnected`,
-        socket.nickname,
-        "info",
-        socket.id
-      );
+    //Emit private message
+    socket.on("private message", ({ content, to }) => {
+      socket.to(to).emit("private message", {
+        content,
+        from: socket.id,
+      });
     });
   });
 };
