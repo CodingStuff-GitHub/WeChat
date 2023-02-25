@@ -31,9 +31,9 @@ const SideDrawer = ({ socket }) => {
       //add the user than send it for sorting
       setUsers(sortUsers([...users, { id, nickname, self: false }]));
     });
-    socket.on("user disconnected", (_message, _nickname, _type, _id) => {
+    socket.on("user disconnected", (_message, _nickname, _type, id) => {
       //remove user and sort again
-      setUsers(sortUsers(users.filter((user) => user.id !== socket.id)));
+      setUsers(sortUsers(users.filter((user) => user.id !== id)));
     });
   }, [socket, users]);
 
