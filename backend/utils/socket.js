@@ -26,14 +26,15 @@ const socketFunctions = (server) => {
       "user connected",
       `${socket.nickname} connected`,
       socket.nickname,
-      "info"
+      "info",
+      socket.id
     );
     // Send all existing users to the client
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
       users.push({
-        userID: id,
-        username: socket.username,
+        id: id,
+        nickname: socket.nickname,
       });
     }
     socket.emit("users", users);
@@ -49,7 +50,8 @@ const socketFunctions = (server) => {
         "user disconnected",
         `${socket.nickname} disconnected`,
         socket.nickname,
-        "info"
+        "info",
+        socket.id
       );
     });
   });

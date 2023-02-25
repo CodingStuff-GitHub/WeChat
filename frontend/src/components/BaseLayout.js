@@ -2,56 +2,22 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import Chatroom from "./Chatroom";
+import SideDrawer from "./SideDrawer";
 
 const drawerWidth = 240;
 
-const ResponsiveDrawer = ({ socket }) => {
+const BaseLayout = ({ socket }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  const drawer = (
-    <div>
-      <Toolbar>
-        <FiberManualRecordIcon
-          sx={{
-            color: "green",
-            width: "16px",
-            height: "16px",
-            marginRight: "8px",
-          }}
-        />
-        <Typography variant="h7" noWrap component="div">
-          Users Online
-        </Typography>
-      </Toolbar>
-      <Divider />
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-    </div>
-  );
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -97,7 +63,7 @@ const ResponsiveDrawer = ({ socket }) => {
             },
           }}
         >
-          {drawer}
+          <SideDrawer socket={socket} />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -110,7 +76,7 @@ const ResponsiveDrawer = ({ socket }) => {
           }}
           open
         >
-          {drawer}
+          <SideDrawer socket={socket} />
         </Drawer>
       </Box>
       <Box
@@ -132,4 +98,4 @@ const ResponsiveDrawer = ({ socket }) => {
   );
 };
 
-export default ResponsiveDrawer;
+export default BaseLayout;

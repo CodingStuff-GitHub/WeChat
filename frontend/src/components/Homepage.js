@@ -1,6 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
-import ResponsiveDrawer from "./Drawer";
+import BaseLayout from "./BaseLayout";
 import Nickname from "./Nickname";
 
 const Homepage = () => {
@@ -15,7 +15,7 @@ const Homepage = () => {
   return (
     <>
       <Nickname socket={newSocket} />
-      <ResponsiveDrawer socket={newSocket} />
+      <BaseLayout socket={newSocket} />
     </>
   );
 };
