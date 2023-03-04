@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Counter from "./components/Counter";
 import Homepage from "./components/Homepage";
 
 const App = () => {
@@ -11,6 +12,14 @@ const App = () => {
           element={
             <>
               <Homepage />
+            </>
+          }
+        />
+        <Route
+          path="/counter"
+          element={
+            <>
+              <Counter />
             </>
           }
         />
