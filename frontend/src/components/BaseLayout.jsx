@@ -9,11 +9,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Chatroom from "./Chatroom";
 import SideDrawer from "./SideDrawer";
+import { useSelector } from "react-redux";
+import PrivateChat from "./PrivateChat";
 
 const drawerWidth = 240;
 
 const BaseLayout = ({ socket }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { selectedChatId } = useSelector((state) => state.rootStore);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -88,11 +91,16 @@ const BaseLayout = ({ socket }) => {
         }}
       >
         <Toolbar />
-        <Chatroom
-          socket={socket}
-          drawerWidth={drawerWidth}
-          mobileOpen={mobileOpen}
-        />
+        {selectedChatId ? (
+          // <PrivateChat/>
+          <>"Under Work"</>
+        ) : (
+          <Chatroom
+            socket={socket}
+            drawerWidth={drawerWidth}
+            mobileOpen={mobileOpen}
+          />
+        )}
       </Box>
     </Box>
   );
