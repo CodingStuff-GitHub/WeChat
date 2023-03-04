@@ -7,6 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import Divider from "@mui/material/Divider";
+import { useSelector, useDispatch } from "react-redux";
+import { selectChat } from "../other/rootSlice";
 
 function sortUsers(users) {
   // put the current user first, and then sort by nickname
@@ -20,6 +22,9 @@ function sortUsers(users) {
 
 const SideDrawer = ({ socket }) => {
   const [users, setUsers] = React.useState([]);
+  const { selectedChatId } = useSelector((state) => state.rootStore);
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
     socket.on("users", (users) => {
       users.forEach((user) => {
@@ -53,21 +58,30 @@ const SideDrawer = ({ socket }) => {
         </Typography>
       </Toolbar>
       <Divider />
+      {/* List of Users */}
       <List>
-        {users.map((user) =>
-          user.self ? (
-            <ListItem key={user.id} disablePadding>
-              <ListItemButton>
-                <ListItemText primary={user.nickname + " (You)"} />
-              </ListItemButton>
-            </ListItem>
-          ) : (
-            <ListItem key={user.id} disablePadding>
-              <ListItemButton>
-                <ListItemText primary={user.nickname} />
-              </ListItemButton>
-            </ListItem>
-          )
+        <ListItem key={0} disablePadding>
+          <ListItemButton
+            selected={selectedChatId === 0}
+            onClick={() => dispatch(selectChat({ selectedChatId: 0 }))}
+          >
+            <ListItemText primary={"Global"} />
+          </ListItemButton>
+        </ListItem>
+        {users.map(
+          (user) =>
+            !user.self && (
+              <ListItem key={user.id} disablePadding>
+                <ListItemButton
+                  selected={selectedChatId === user.id}
+                  onClick={() =>
+                    dispatch(selectChat({ selectedChatId: user.id }))
+                  }
+                >
+                  <ListItemText primary={user.nickname} />
+                </ListItemButton>
+              </ListItem>
+            )
         )}
       </List>
       <Divider />
