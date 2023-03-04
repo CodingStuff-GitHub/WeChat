@@ -11,7 +11,11 @@ const socketFunctions = (server) => {
   //Middleware for checking the nickname
   io.use((socket, next) => {
     const nickname = socket.handshake.auth.nickname;
-    if (!nickname || nickname === "admin") {
+    if (
+      !nickname ||
+      nickname.toLowerCase() === "admin" ||
+      nickname.toLowerCase() === "global"
+    ) {
       console.log("Invalid: " + nickname);
       return next(new Error("Invalid nickname", 401));
     }
