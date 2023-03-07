@@ -1,5 +1,6 @@
 import * as React from "react";
 import List from "@mui/material/List";
+import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -20,7 +21,7 @@ function sortUsers(users) {
   });
 }
 
-const SideDrawer = ({ socket }) => {
+const SideDrawer = ({ socket, drawerWidth }) => {
   const [users, setUsers] = React.useState([]);
   const { selectedChatId } = useSelector((state) => state.rootStore);
   const dispatch = useDispatch();
@@ -44,20 +45,32 @@ const SideDrawer = ({ socket }) => {
 
   return (
     <div>
-      <Toolbar>
-        <FiberManualRecordIcon
-          sx={{
-            color: "green",
-            width: "16px",
-            height: "16px",
-            marginRight: "8px",
-          }}
-        />
-        <Typography variant="h7" noWrap component="div">
-          Users Online
-        </Typography>
-      </Toolbar>
-      <Divider />
+      <Box
+        position="fixed"
+        sx={{
+          zIndex: 10,
+          backgroundColor: "#ffffff",
+          width: `${drawerWidth}px`,
+          top: 0,
+          bottom: "auto",
+        }}
+      >
+        <Toolbar>
+          <FiberManualRecordIcon
+            sx={{
+              color: "green",
+              width: "16px",
+              height: "16px",
+              marginRight: "8px",
+            }}
+          />
+          <Typography variant="h7" noWrap component="div">
+            Users Online
+          </Typography>
+        </Toolbar>
+        <Divider />
+      </Box>
+      <Toolbar />
       {/* List of Users */}
       <List>
         <ListItem key={0} disablePadding>
@@ -68,23 +81,61 @@ const SideDrawer = ({ socket }) => {
             <ListItemText primary={"Global"} />
           </ListItemButton>
         </ListItem>
-        {users.map(
-          (user) =>
-            !user.self && (
-              <ListItem key={user.id} disablePadding>
-                <ListItemButton
-                  selected={selectedChatId === user.id}
-                  onClick={() =>
-                    dispatch(selectChat({ selectedChatId: user.id }))
-                  }
-                >
-                  <ListItemText primary={user.nickname} />
-                </ListItemButton>
-              </ListItem>
-            )
-        )}
+        {/* TESTING SCROLL FROM BELOW */}
+        <ListItem key={0} disablePadding>
+          <ListItemButton
+            selected={selectedChatId === 0}
+            onClick={() => dispatch(selectChat({ selectedChatId: 0 }))}
+          >
+            <ListItemText primary={"FIRST"} />
+          </ListItemButton>
+        </ListItem>
+        {[...Array(50)].map((elementInArray, index) => (
+          <ListItem key={elementInArray} disablePadding>
+            <ListItemButton
+              selected={selectedChatId === 0}
+              onClick={() => dispatch(selectChat({ selectedChatId: 0 }))}
+            >
+              <ListItemText primary={"Global" + elementInArray} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+        <ListItem key={0} disablePadding>
+          <ListItemButton
+            selected={selectedChatId === 0}
+            onClick={() => dispatch(selectChat({ selectedChatId: 0 }))}
+          >
+            <ListItemText primary={"LAST"} />
+          </ListItemButton>
+        </ListItem>
+        {/* TESTING SCROLL ENDS HERE */}
       </List>
-      <Divider />
+      <Toolbar />
+      <Box
+        position="fixed"
+        sx={{
+          zIndex: 1000,
+          backgroundColor: "#ffffff",
+          width: 240,
+          top: "auto",
+          bottom: 0,
+        }}
+      >
+        <Toolbar>
+          <FiberManualRecordIcon
+            sx={{
+              color: "green",
+              width: "16px",
+              height: "16px",
+              marginRight: "8px",
+            }}
+          />
+          <Typography variant="h7" noWrap component="div">
+            Users Online
+          </Typography>
+        </Toolbar>
+        <Divider />
+      </Box>
     </div>
   );
 };
