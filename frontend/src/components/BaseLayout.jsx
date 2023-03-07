@@ -10,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import Chatroom from "./Chatroom";
 import SideDrawer from "./SideDrawer";
 import { useSelector } from "react-redux";
-import PrivateChat from "./PrivateChat";
 
 const drawerWidth = 240;
 
@@ -66,7 +65,7 @@ const BaseLayout = ({ socket }) => {
             },
           }}
         >
-          <SideDrawer socket={socket} />
+          <SideDrawer socket={socket} drawerWidth={drawerWidth} />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -79,7 +78,7 @@ const BaseLayout = ({ socket }) => {
           }}
           open
         >
-          <SideDrawer socket={socket} />
+          <SideDrawer socket={socket} drawerWidth={drawerWidth} />
         </Drawer>
       </Box>
       <Box
