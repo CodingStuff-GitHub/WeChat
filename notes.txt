@@ -1,0 +1,2 @@
+You can use 'fromSelf:true' in message emitting to let you know that message was sent by yourself.
+Put args in a bracket json one
